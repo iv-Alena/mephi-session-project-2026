@@ -1,0 +1,237 @@
+
+  131  ip a
+  132  ip route
+  133  cat /etc/resolv.conf 
+  134  nmcli con show
+  135  ping -c 4 8.8.8.8
+  136  sudo nmcli con mod Skynet515 ipv4.method auto
+  137  sudo nmcli con mod Skynet515 ipv4.ignore-auto-dns no
+  138  sudo nmcli con mod Skynet515 -ipv4.addresses
+  139  sudo nmcli con mod Skynet515 -ipv4.gateway
+  140  sudo nmcli con mod Skynet515 -ipv4.dns
+  141  sudo nmcli con mod Skynet515
+  142  sudo nmcli con mod Skynet515 -ipv4.addresses 192.168.1.1
+  143  sudo nmcli con mod Skynet515 -ipv4.gateway 192.168.1.1
+  144  sudo nmcli con mod Skynet515 -ipv4.dns 8.8.8.8
+  145  sudo nmcli con down Skynet515 
+  146  sudo nmcli con up Skynet515
+  147  ip a
+  148  nmcli con show
+  149  sudo nmcli con mod Skynet515 ipv4.addresses 192.168.1.100/24
+  150  sudo nmcli con mod Skynet515 ipv4.gateway 192.168.1.1
+  151  sudo nmcli con mod Skynet515 ipv4.dns "8.8.8.8"
+  152  sudo nmcli con mod Skynet515 ipv4.method manual
+  153  sudo nmcli con mod Skynet515 ipv4.ignore-auto-dns yes
+  154  sudo nmcli con down Skynet515
+  155  sudo nmcli con up Skynet515
+  156  sudo hostnamectl set-hostname mephi-2026.domain.local
+  157  sudo ip route default via 192.168.1.1 dev vetn-main
+  158  sudo ip route replace default via 192.168.1.1 dev vetn-main
+  159  history
+  160  sudo ip netns add router
+  161  sudo ip netns list
+  162  sudo ip link add veth-main type veth peer name veth-router
+  163  sudo ip link set veth-router netns router
+  164  sudo ip link set wlp4s0f3u2 netns router
+  165  sudo ip link set veth-main up
+  166  sudo ip addr add 192.168.1.100/24 dev veth-main
+  167  sudo ip netns exec router ip link set lo up
+  168  sudo ip netns exec router ip link set veth-router up
+  169  sudo ip netns exec router ip addr add 192.168.1.1/24 dev veth-router
+  170  sudo ip netns exec router ip link set wlp4s0f3u2 up
+  171  sudo ip netns del router
+  172  sudo ip link del veth-main
+  173  ip netns list
+  174  ip a
+  175  iw dev
+  176  sudo ip netns add router
+  177  sudo ip netns add router
+  178  sudo ip link add veth-main type veth peer name veth-router
+  179  sudo ip link set veth-router netns router
+  180  sudo ip link set veth-main up
+  181  sudo ip addr add 192.168.1.100/24 dev veth-main
+  182  sudo ip netns exec router ip link set lo up
+  183  sudo ip netns exec router ip link set veth-router up
+  184  sudo ip netns exec router ip addr add 192.168.1.1/24 dev veth-router
+  185  sudo iw phy phy2 set netns name router
+  186  sudo ip netns exec router iw dev
+  187  sudo ip netns exec router ip a
+  188  iw dev
+  189  which wpa_supplicant
+  190  which dhclient
+  191  which dhcpcd
+  192  sudo ip netns exec router iw dev
+  193  sudo ip netns exec router ip link set wlp4s0f3u2 up
+  194  sudo ip netns exec router ip a
+  195  wpa_passphrase "Skynet515" "88213234" | sudo tee /tmp/router-wpa.conf
+  196  sodu ip netns exec router wpa_supllicant -B -i wlp4s0f3u2 -c /tmp/router-wpa.conf
+  197  sudo ip netns exec router wpa_supllicant -B -i wlp4s0f3u2 -c /tmp/router-wpa.conf
+  198  sudo ip netns exec router dhclient wlp4s0f3u2
+  199  sudo ip netns exec router ip a
+  200  sudo ip netns exec router ip link set wlp4s0f3u2 up
+  201  sudo ip netns exec router ip a
+  202  sudo ip netns exec router /usr/sbin/wpa_supllicant -B -i wlp4s0f3u2 -c /tmp/router-wpa.conf
+  203  sudo ip netns exec router /usr/sbin/dhclient wlp4s0f3u2
+  204  sudo ip netns exec router ip a
+  205  sudo ip netns exec router /usr/sbin/wpa_supplicant -B -i wlp4s0f3u2 -c /tmp/router-wpa.conf
+  206  sudo ip netns exec router ip a
+  207  sudo ip netns exec router ip router
+  208  sudo ip netns exec router ip route
+  209  sudo pkill dhclient
+  210  sudo ip netns exec router /usr/sbin/dhclient -v wlp4s0f3u2
+  211  sudo ip netns exec router ip a
+  212  sudo ip netns exec router route
+  213  ip a
+  214  sudo ip netns exec router sysctl -w net.ipv4.ip_forward=1
+  215  sudo ip netns exec router iptables -A FORWARD -i veth-router -o wlp4s0f3u2 -j ACCEPT
+  216  sudo ip netns exec router iptables -A FORWARD -i wlp4s0f3u2 -o veth-router -m state --state ESTABLISHED,RELATED -j ACCEPT
+  217  sudo ip netns exec router iptables -t nat -A POSTROUTING -o wlp4s0f3u2 -j MASQUERADE
+  218  echo "nameserver 8.8.8.8" | sudo tee /etc/resolv.conf
+  219  ip a
+  220   ip route
+  221  ping -c 4 192.168.1.1
+  222  ping -c 4 8.8.8.8
+  223  ping -c 4 google.com
+  224  echo "nameserver 8.8.8.8" | sudo tee /etc/resolv.conf
+  225  ping -c 4 google.com
+  226  sudo hostnamectl set-hostname mephi-2026.domain.local
+  227  hostnamectl
+  228  ip route
+  229  ping -c 4 8.8.8.8 > /tmp/network_check.txt
+  230  ping -c 4 192.168.1.1 >> /tmp/network_check.txt
+  231  sudo dnf install -y nginx tcpdump libcap-ng-utils
+  232  sudo dnf download tcpdump --downloaddir=/tmp
+  233  ls -l /tmp/tcpdump*.rpm
+  234  sudo rpm -Uvh /tmp/tcpdump*.rpm
+  235  sudo rpm -Uvh --replacepkgs /tmp/tcpdump-4.99.5-1.red80.x86_64.rpm
+  236  dd if=/dev/zero of=/tmp/disk.img bs=1M count=2048
+  237  sudo losetup -fP /tmp/disk.img
+  238  losetup -a
+  239  sudo fdisk /dev/loop0
+  240  sudo mkfs.ext4 -L MEPHI_DATA /dev/loop0p1
+  241  sudo mkdir -p /data/mephi-web
+  242  echo 'LABEL=MEPHI_DATA /data/mephi-web ext4 defaults 0 2' | sudo tee -a /etc/fstab
+  243  sudo mount -a
+  244  sudo systemctl daemon-reload
+  245  sudo mount -a
+  246  sudo systemctl start nginx
+  247  sudo systemctl enable nginx
+  248  systemctl is-active nginx
+  249  systemctl is-enabled nginx
+  250  journalctl -u nginx --since "5 minutes ago" > /tmp/nginx_recent_logs.txt
+  251  cat /tmp/nginx_recent_logs.txt
+  252  sudo groupadd mephi-devs
+  253  sudo useradd -m -G mephi-devs mephi-admin
+  254  echo 'mephi-admin:P@ssw0rd2026.' | sudo chpasswd
+  255  sudo chown mephi-admin:mephi-devs /data/mephi-web
+  256  sudo chmod 2775 /data/mephi-web
+  257  id mephi-admin
+  258  ls -ld /data/mephi-web
+  259  getenforce
+  260  sudo semanage fcontext -a -t httpd_sys_content_t "/data/mephi-web(/.*)?"
+  261  sudo restorecon -Rv /data/mephi-web
+  262  ls -Zd /data/mephi-web
+  263  ls -Z /data/mephi-web
+  264  echo 'test' | sudo tee /data/mephi-web/index.html
+  265  sudo chown mephi-admin:mephi-devs /data/mephi-web/index.html
+  266  ls -Z /data/mephi-web/index.html
+  267  grep -n "root\|server_name\|location /" /etc/nginx/nginx.conf
+  268  sudo nano /etc/nginx/nginx.conf
+  269  ls -l /usr/sbin/tcpdump
+  270  sudo chmod u-s /usr/sbin/tcpdump
+  271  sudo setcap cap_net_raw,cap_net_admin=eip /usr/sbin/tcpdump
+  272  getcap /usr/sbin/tcpdump
+  273  sudo -u mephi-admin tcpdump --help
+  274  getenforce > ~/selinux_status.txt
+  275  ls -Zd /data/mephi-web > ~/file_contexts.txt
+  276  getcap /usr/sbin/tcpdump > ~/tcpdump_capabilities.txt
+  277  sudo ip route replace default via 192.168.1.1 dev veth-main
+  278  ip route
+  279  echo -e "nameserver 192.168.3.1\nnameserver 8.8.8.8" | sudo tee /etc/resolv.conf
+  280  cat /etc/resolv.conf
+  281  ping -c 4 google.com
+  282  getent hosts google.com
+  283  gred '^hosts:' /etc/nsswitch.conf
+  284  grep '^hosts:' /etc/nsswitch.conf
+  285  sudo cp /etc/nsswitch.conf /etc/nsswitch.conf.bak
+  286  sudo sed -i 's/^hosts:.*/hosts:   files dns myhostname/' etc/nsswitch.conf
+  287  sudo sed -i 's/^hosts:.*/hosts:   files dns myhostname/' /etc/nsswitch.conf
+  288  ping -c 4 8.8.8.8
+  289   ping -c 4 192.168.1.1
+  290  ls -l /tmp/tcpdump*.rpm
+  291  df info tcddump
+  292  df info tcpdump
+  293  rpm -q tcpdump
+  294  sudo dnf clean all
+  295  sudo dnf makecache
+  296  sudo dnf download tcpdump --downloaddir=/tmp
+  297  ls -l /tmp/tcpdump*.rpm
+  298  ping -c 4 192.168.1.1
+  299  ip a
+  300  ip route
+  301  sudo ip netns list
+  302  sudo ip netns exec router ip a
+  303  sudo ip netns exec router ip route
+  304  ping -c 4 192.168.1.1
+  305  ping -c 4 8.8.8.8
+  306  ping -c 4 google.com
+  307  cat /etc/resolv.conf
+  308  echo -e "nameserver 192.168.3.1\nnameserver 8.8.8.8" | sudo tee /etc/resolv.conf
+  309  rpm -q nginx tcpdump libcap-ng-utils
+  310  which getcap
+  311  which setcap
+  312  lsdlk
+  313  lsblk
+  314  dd if=/dev/zero of=/tmp/disk.img bs=1M count=2048
+  315  dd if=/dev/zero of=/tmp/disk.img bs=1M count=2048
+  316  sudo losetup -fP /tmp/disk.img
+  317  losetup -a
+  318  mount | grep mephi
+  319  cat /etc/fstab > fstab.txt
+  320  ping -c 4 google.com
+  321  echo -e "nameserver 192.168.3.1\nnameserver 8.8.8.8" | sudo tee /etc/resolv.conf
+  322  which semanage
+  323  stat /data/mephi-web > ~/permissions.txt
+  324  stat /data/mephi-web > ~/permissions.txt
+  325  id mephi-admin > /users_groups.txt
+  326  stat /data/mephi-web > /permissions.txt
+  327  id mephi-admin > ~/users_groups.txt
+  328  id mephi-admin > ~/users_groups.txt
+  329  sudo nginx -t
+  330  sudo systemctl restart nginx
+  331  curl http://127.0.0.1
+  332  sudo nginx -t
+  333  sudo nginx -t
+  334  sudo systemctl restart nginx
+  335  curl -I http://127.0.0.1
+  336  sudo nano /etc/nginx/nginx.conf
+  337  sudo nginx -t
+  338  sudo systemctl restart nginx
+  339  curl -I http://127.0.0.1
+  340  curl http://127.0.0.1
+  341  ip a
+  342  ip route
+  343  lsblk
+  344  sudo losetup -a
+  345  mount | grep mephi
+  346  cat /etc/fstab
+  347  rpm -q nginx tcpdump libcap-ng-utils
+  348  id mephi-admin
+  349  getcap /usr/sbin/tcpdump
+  350  systemctl is-active nginx
+  351  systemctl is-enabled nginx
+  352  getenforce
+  353  ls -ld /data/mephi-web
+  354  su - mephi-admin
+  355  sudo -u mephi-admin sh -c 'echo "Hello from Student: М255577" > /data/mephi-web/index.html'
+  356  cat /data/mephi-web/index.html
+  357  ls -l /data/mephi-web/index.html
+  358  curl http://localhost
+  359  sudo restorecon -Rv /data/mephi-web
+  360  ls -Zd /data/mephi-web
+  361  ls -Z /data/mephi-web/index.html
+  362  curl http://localhost
+  363  curl http://192.168.1.100
+  364  curl -s http://192.168.1.100 > ~/curl_output.txt
+  365  history
+[alena@mephi-2026 ~]$ 

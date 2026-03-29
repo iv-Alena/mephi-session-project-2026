@@ -1,0 +1,627 @@
+[alena@localhost ~]$ 
+sudo ip netns add router
+[sudo] пароль для alena: 
+[alena@localhost ~]$ sudo ip netns list
+router
+[alena@localhost ~]$ sudo ip link add veth-main type veth peer name veth-router
+[alena@localhost ~]$ sudo ip link set veth-router netns router
+[alena@localhost ~]$ sudo ip link set wlp4s0f3u2 netns router
+RTNETLINK answers: Invalid argument
+[alena@localhost ~]$ 
+sudo ip link set veth-main up
+[alena@localhost ~]$ sudo ip addr add 192.168.1.100/24 dev veth-main
+[alena@localhost ~]$ sudo ip netns exec router ip link set lo up
+[alena@localhost ~]$ sudo ip netns exec router ip link set veth-router up
+[alena@localhost ~]$ sudo ip netns exec router ip addr add 192.168.1.1/24 dev veth-router
+[alena@localhost ~]$ sudo ip netns exec router ip link set wlp4s0f3u2 up
+Cannot find device "wlp4s0f3u2"
+[alena@localhost ~]$ sudo ip netns del router
+[alena@localhost ~]$ sudo ip link del veth-main
+Cannot find device "veth-main"
+[alena@localhost ~]$ ip netns list
+[alena@localhost ~]$ ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host noprefixroute 
+       valid_lft forever preferred_lft forever
+2: enp2s0f1: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc fq_codel state DOWN group default qlen 1000
+    link/ether 98:28:a6:16:e0:b7 brd ff:ff:ff:ff:ff:ff
+4: wlp4s0f3u2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether 10:fe:ed:1b:1e:db brd ff:ff:ff:ff:ff:ff
+    inet 192.168.3.18/24 brd 192.168.3.255 scope global dynamic noprefixroute wlp4s0f3u2
+       valid_lft 85723sec preferred_lft 85723sec
+    inet6 fe80::c135:2e62:3f5f:8dfd/64 scope link noprefixroute 
+       valid_lft forever preferred_lft forever
+[alena@localhost ~]$ iw dev
+phy#2
+        Interface wlp4s0f3u2
+                ifindex 4
+                wdev 0x200000001
+                addr 10:fe:ed:1b:1e:db
+                type managed
+                channel 6 (2437 MHz), width: 40 MHz, center1: 2447 MHz
+                txpower 20.00 dBm
+                multicast TXQ:
+                        qsz-byt qsz-pkt flows   drops   marks   overlmt hashcol tx-bytes        tx-packets
+                        0       0       0       0       0       0       0       0               0
+[alena@localhost ~]$ ^[[200~sudo ip netns add router
+bash: sudo: команда не найдена...
+[alena@localhost ~]$ sudo ip netns add router
+[alena@localhost ~]$ sudo ip link add veth-main type veth peer name veth-router
+[alena@localhost ~]$ sudo ip link set veth-router netns router
+[alena@localhost ~]$ sudo ip link set veth-main up
+[alena@localhost ~]$ sudo ip addr add 192.168.1.100/24 dev veth-main
+[alena@localhost ~]$ sudo ip netns exec router ip link set lo up
+[alena@localhost ~]$ sudo ip netns exec router ip link set veth-router up
+[alena@localhost ~]$ sudo ip netns exec router ip addr add 192.168.1.1/24 dev veth-router
+[alena@localhost ~]$ sudo iw phy phy2 set netns name router
+[alena@localhost ~]$ sudo ip netns exec router iw dev
+phy#2
+        Interface wlp4s0f3u2
+                ifindex 4
+                wdev 0x200000001
+                addr 10:fe:ed:1b:1e:db
+                type managed
+                txpower 20.00 dBm
+                multicast TXQ:
+                        qsz-byt qsz-pkt flows   drops   marks   overlmt hashcol tx-bytes        tx-packets
+                        0       0       0       0       0       0       0       0               0
+[alena@localhost ~]$ sudo ip netns exec router ip a  
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+4: wlp4s0f3u2: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether 10:fe:ed:1b:1e:db brd ff:ff:ff:ff:ff:ff
+7: veth-router@if8: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether e6:65:8e:ee:01:ba brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 192.168.1.1/24 scope global veth-router
+       valid_lft forever preferred_lft forever
+    inet6 fe80::e465:8eff:feee:1ba/64 scope link 
+       valid_lft forever preferred_lft forever
+[alena@localhost ~]$ iw dev
+[alena@localhost ~]$ which wpa_supplicant
+/usr/sbin/wpa_supplicant
+[alena@localhost ~]$ which dhclient
+/usr/sbin/dhclient
+[alena@localhost ~]$ which dhcpcd
+/usr/bin/which: no dhcpcd in (/home/alena/.local/bin:/home/alena/bin:/usr/lib64/ccache:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin)
+[alena@localhost ~]$ sudo ip netns exec router iw dev
+[sudo] пароль для alena: 
+phy#2
+        Interface wlp4s0f3u2
+                ifindex 4
+                wdev 0x200000001
+                addr 10:fe:ed:1b:1e:db
+                type managed
+                txpower 20.00 dBm
+                multicast TXQ:
+                        qsz-byt qsz-pkt flows   drops   marks   overlmt hashcol tx-bytes        tx-packets
+                        0       0       0       0       0       0       0       0               0
+[alena@localhost ~]$ sudo ip netns exec router ip link set wlp4s0f3u2 up
+[alena@localhost ~]$ sudo ip netns exec router ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+4: wlp4s0f3u2: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default qlen 1000
+    link/ether 10:fe:ed:1b:1e:db brd ff:ff:ff:ff:ff:ff
+7: veth-router@if8: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether e6:65:8e:ee:01:ba brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 192.168.1.1/24 scope global veth-router
+       valid_lft forever preferred_lft forever
+    inet6 fe80::e465:8eff:feee:1ba/64 scope link 
+       valid_lft forever preferred_lft forever
+[alena@localhost ~]$ wpa_passphrase "Skynet515" "88213234" | sudo tee /tmp/router-wpa.conf
+network={
+        ssid="Skynet515"
+        #psk="88213234"
+        psk=bcf7c61a33991b6996b71e962b6d87a0fa81820660dd0a9915cfa827e06f95fa
+}
+[alena@localhost ~]$ sodu ip netns exec router wpa_supllicant -B -i wlp4s0f3u2 -c /tmp/router-wpa.conf
+bash: sodu: команда не найдена...
+[alena@localhost ~]$ sudo ip netns exec router wpa_supllicant -B -i wlp4s0f3u2 -c /tmp/router-wpa.conf
+exec of "wpa_supllicant" failed: No such file or directory
+[alena@localhost ~]$ sudo ip netns exec router dhclient wlp4s0f3u2
+grep: /etc/sysconfig/network-scripts/ifcfg-*: No such file or directory
+grep: /etc/sysconfig/network-scripts/ifcfg-*: No such file or directory
+grep: /etc/sysconfig/network-scripts/ifcfg-*: No such file or directory
+sudo ip netns exec router ip a
+grep: /etc/sysconfig/network-scripts/ifcfg-*: No such file or directory
+grep: /etc/sysconfig/network-scripts/ifcfg-*: No such file or directory
+grep: /etc/sysconfig/network-scripts/ifcfg-*: No such file or directory
+[alena@localhost ~]$ sudo ip netns exec router ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+4: wlp4s0f3u2: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default qlen 1000
+    link/ether 10:fe:ed:1b:1e:db brd ff:ff:ff:ff:ff:ff
+7: veth-router@if8: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether e6:65:8e:ee:01:ba brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 192.168.1.1/24 scope global veth-router
+       valid_lft forever preferred_lft forever
+    inet6 fe80::e465:8eff:feee:1ba/64 scope link 
+       valid_lft forever preferred_lft forever
+[alena@localhost ~]$ sudo ip netns exec router ip link set wlp4s0f3u2 up
+[alena@localhost ~]$ sudo ip netns exec router ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+4: wlp4s0f3u2: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default qlen 1000
+    link/ether 10:fe:ed:1b:1e:db brd ff:ff:ff:ff:ff:ff
+7: veth-router@if8: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether e6:65:8e:ee:01:ba brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 192.168.1.1/24 scope global veth-router
+       valid_lft forever preferred_lft forever
+    inet6 fe80::e465:8eff:feee:1ba/64 scope link 
+       valid_lft forever preferred_lft forever
+[alena@localhost ~]$ sudo ip netns exec router /usr/sbin/wpa_supllicant -B -i wlp4s0f3u2 -c /tmp/router-wpa.conf
+exec of "/usr/sbin/wpa_supllicant" failed: No such file or directory
+[alena@localhost ~]$ sudo ip netns exec router /usr/sbin/dhclient wlp4s0f3u2
+dhclient(6703) is already running - exiting. 
+
+This version of ISC DHCP is based on the release available
+on ftp.isc.org. Features have been added and other changes
+have been made to the base software release in order to make
+it work better with this distribution.
+
+Please report for this software via the RedOS Bugs Database: 
+https://support.red-soft.ru
+
+exiting.
+[alena@localhost ~]$ sudo ip netns exec router ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+4: wlp4s0f3u2: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default qlen 1000
+    link/ether 10:fe:ed:1b:1e:db brd ff:ff:ff:ff:ff:ff
+7: veth-router@if8: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether e6:65:8e:ee:01:ba brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 192.168.1.1/24 scope global veth-router
+       valid_lft forever preferred_lft forever
+    inet6 fe80::e465:8eff:feee:1ba/64 scope link 
+       valid_lft forever preferred_lft forever
+[alena@localhost ~]$ sudo ip netns exec router /usr/sbin/wpa_supplicant -B -i wlp4s0f3u2 -c /tmp/router-wpa.conf
+Successfully initialized wpa_supplicant
+[alena@localhost ~]$ sudo ip netns exec router ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+4: wlp4s0f3u2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether 10:fe:ed:1b:1e:db brd ff:ff:ff:ff:ff:ff
+    inet6 fe80::12fe:edff:fe1b:1edb/64 scope link 
+       valid_lft forever preferred_lft forever
+7: veth-router@if8: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether e6:65:8e:ee:01:ba brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 192.168.1.1/24 scope global veth-router
+       valid_lft forever preferred_lft forever
+    inet6 fe80::e465:8eff:feee:1ba/64 scope link 
+       valid_lft forever preferred_lft forever
+[alena@localhost ~]$ sudo ip netns exec router ip router
+Object "router" is unknown, try "ip help".
+[alena@localhost ~]$ sudo ip netns exec router ip route
+default via 192.168.3.1 dev wlp4s0f3u2 
+192.168.1.0/24 dev veth-router proto kernel scope link src 192.168.1.1 
+192.168.3.0/24 dev wlp4s0f3u2 proto kernel scope link src 192.168.3.18 
+[alena@localhost ~]$ sudo pkill dhclient
+[alena@localhost ~]$ sudo ip netns exec router /usr/sbin/dhclient -v wlp4s0f3u2
+Internet Systems Consortium DHCP Client 4.4.3
+Copyright 2004-2022 Internet Systems Consortium.
+All rights reserved.
+For info, please visit https://www.isc.org/software/dhcp/
+
+parse_option_param: Bad format d
+grep: /etc/sysconfig/network-scripts/ifcfg-*: No such file or directory
+grep: /etc/sysconfig/network-scripts/ifcfg-*: No such file or directory
+grep: /etc/sysconfig/network-scripts/ifcfg-*: No such file or directory
+Listening on LPF/wlp4s0f3u2/10:fe:ed:1b:1e:db
+Sending on   LPF/wlp4s0f3u2/10:fe:ed:1b:1e:db
+Sending on   Socket/fallback
+DHCPREQUEST for 192.168.3.18 on wlp4s0f3u2 to 255.255.255.255 port 67 (xid=0x5294735a)
+DHCPACK of 192.168.3.18 from 192.168.3.1 (xid=0x5294735a)
+Invalid domain name.
+grep: /etc/sysconfig/network-scripts/ifcfg-*: No such file or directory
+grep: /etc/sysconfig/network-scripts/ifcfg-*: No such file or directory
+grep: /etc/sysconfig/network-scripts/ifcfg-*: No such file or directory
+/usr/sbin/dhclient-script: line 704: /etc/resolv.conf: Permission denied
+Invalid domain name.
+bound to 192.168.3.18 -- renewal in 37993 seconds.
+[alena@localhost ~]$ sudo ip netns exec router ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+4: wlp4s0f3u2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether 10:fe:ed:1b:1e:db brd ff:ff:ff:ff:ff:ff
+    inet 192.168.3.18/24 brd 192.168.3.255 scope global dynamic wlp4s0f3u2
+       valid_lft 86437sec preferred_lft 86437sec
+    inet6 fe80::12fe:edff:fe1b:1edb/64 scope link 
+       valid_lft forever preferred_lft forever
+7: veth-router@if8: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether e6:65:8e:ee:01:ba brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 192.168.1.1/24 scope global veth-router
+       valid_lft forever preferred_lft forever
+    inet6 fe80::e465:8eff:feee:1ba/64 scope link 
+       valid_lft forever preferred_lft forever
+[alena@localhost ~]$ sudo ip netns exec router route
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+default         _gateway        0.0.0.0         UG    0      0        0 wlp4s0f3u2
+192.168.1.0     0.0.0.0         255.255.255.0   U     0      0        0 veth-router
+192.168.3.0     0.0.0.0         255.255.255.0   U     0      0        0 wlp4s0f3u2
+[alena@localhost ~]$ ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host noprefixroute 
+       valid_lft forever preferred_lft forever
+2: enp2s0f1: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc fq_codel state DOWN group default qlen 1000
+    link/ether 98:28:a6:16:e0:b7 brd ff:ff:ff:ff:ff:ff
+8: veth-main@if7: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether d2:74:95:1a:72:2a brd ff:ff:ff:ff:ff:ff link-netns router
+    inet 192.168.1.100/24 scope global veth-main
+       valid_lft forever preferred_lft forever
+    inet6 fe80::d074:95ff:fe1a:722a/64 scope link 
+       valid_lft forever preferred_lft forever
+[alena@localhost ~]$ sudo ip netns exec router sysctl -w net.ipv4.ip_forward=1
+[sudo] пароль для alena: 
+net.ipv4.ip_forward = 1
+[alena@localhost ~]$ sudo ip netns exec router iptables -A FORWARD -i veth-router -o wlp4s0f3u2 -j ACCEPT
+[alena@localhost ~]$ sudo ip netns exec router iptables -A FORWARD -i wlp4s0f3u2 -o veth-router -m state --state ESTABLISHED,RELATED -j ACCEPT
+[alena@localhost ~]$ sudo ip netns exec router iptables -t nat -A POSTROUTING -o wlp4s0f3u2 -j MASQUERADE
+[alena@localhost ~]$ echo "nameserver 8.8.8.8" | sudo tee /etc/resolv.conf
+nameserver 8.8.8.8
+[alena@localhost ~]$ ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host noprefixroute 
+       valid_lft forever preferred_lft forever
+2: enp2s0f1: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc fq_codel state DOWN group default qlen 1000
+    link/ether 98:28:a6:16:e0:b7 brd ff:ff:ff:ff:ff:ff
+8: veth-main@if7: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether d2:74:95:1a:72:2a brd ff:ff:ff:ff:ff:ff link-netns router
+    inet 192.168.1.100/24 scope global veth-main
+       valid_lft forever preferred_lft forever
+    inet6 fe80::d074:95ff:fe1a:722a/64 scope link 
+       valid_lft forever preferred_lft forever
+[alena@localhost ~]$  ip route
+default via 192.168.1.1 dev veth-main 
+192.168.1.0/24 dev veth-main proto kernel scope link src 192.168.1.100 
+[alena@localhost ~]$ ping -c 4 192.168.1.1
+PING 192.168.1.1 (192.168.1.1) 56(84) bytes of data.
+64 bytes from 192.168.1.1: icmp_seq=1 ttl=64 time=0.115 ms
+64 bytes from 192.168.1.1: icmp_seq=2 ttl=64 time=0.064 ms
+64 bytes from 192.168.1.1: icmp_seq=3 ttl=64 time=0.058 ms
+64 bytes from 192.168.1.1: icmp_seq=4 ttl=64 time=0.080 ms
+
+--- 192.168.1.1 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3107ms
+rtt min/avg/max/mdev = 0.058/0.079/0.115/0.022 ms
+[alena@localhost ~]$ ping -c 4 8.8.8.8
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=102 time=101 ms
+64 bytes from 8.8.8.8: icmp_seq=2 ttl=102 time=12.8 ms
+64 bytes from 8.8.8.8: icmp_seq=3 ttl=102 time=6.25 ms
+64 bytes from 8.8.8.8: icmp_seq=4 ttl=102 time=8.93 ms
+
+--- 8.8.8.8 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3004ms
+rtt min/avg/max/mdev = 6.254/32.301/101.209/39.852 ms
+[alena@localhost ~]$ ping -c 4 google.com
+ping: google.com: Временный сбой в разрешении имен
+[alena@localhost ~]$ echo "nameserver 8.8.8.8" | sudo tee /etc/resolv.conf
+[sudo] пароль для alena: 
+Попробуйте ещё раз.
+[sudo] пароль для alena: 
+nameserver 8.8.8.8
+[alena@localhost ~]$ ping -c 4 google.com
+ping: google.com: Временный сбой в разрешении имен
+[alena@localhost ~]$ sudo hostnamectl set-hostname mephi-2026.domain.local
+[sudo] пароль для alena: 
+[alena@localhost ~]$ hostnamectl
+ Static hostname: mephi-2026.domain.local
+       Icon name: dsp
+         Chassis: laptop 💻
+      Machine ID: 9a60617f0f0941d7a234fa618e90cb8d
+         Boot ID: ec735dc2540e4a858164c46fe80873e3
+Operating System: RED OS 8.0.2                    
+     CPE OS Name: cpe:/o:redos:redos:8
+          Kernel: Linux 6.12.56-1.red80.x86_64
+    Architecture: x86-64
+ Hardware Vendor: Acer
+  Hardware Model: Aspire A315-41G
+Firmware Version: V1.18
+   Firmware Date: Thu 2020-06-18
+[alena@localhost ~]$ ip route
+default via 192.168.1.1 dev veth-main 
+192.168.1.0/24 dev veth-main proto kernel scope link src 192.168.1.100 
+[alena@localhost ~]$ ping -c 4 8.8.8.8 > /tmp/network_check.txt
+[alena@localhost ~]$ ping -c 4 192.168.1.1 >> /tmp/network_check.txt
+[alena@localhost ~]$ sudo dnf install -y nginx tcpdump libcap-ng-utils
+[sudo] пароль для alena: 
+Последняя проверка окончания срока действия метаданных: 2:36:09 назад, Сб 28 мар 2026 20:09:01.
+Пакет tcpdump-14:4.99.5-1.red80.x86_64 уже установлен.
+Зависимости разрешены.
+=======================================================================================================================================================================
+ Пакет                                       Архитектура                       Версия                                         Репозиторий                        Размер
+=======================================================================================================================================================================
+Установка:
+ libcap-ng-utils                             x86_64                            0.8.3-3.red80                                  base                                36 k
+ nginx                                       x86_64                            1:1.28.2-1.red80                               updates                             33 k
+Установка зависимостей:
+ nginx-core                                  x86_64                            1:1.28.2-1.red80                               updates                            668 k
+ nginx-filesystem                            noarch                            1:1.28.2-1.red80                               updates                            8.7 k
+ nginx-mimetypes                             noarch                            2.1.53-3.red80                                 base                                20 k
+
+Результат транзакции
+=======================================================================================================================================================================
+Установка  5 Пакетов
+
+Объем загрузки: 765 k
+Объем изменений: 2.1 M
+Загрузка пакетов:
+(1/5): libcap-ng-utils-0.8.3-3.red80.x86_64.rpm                                                                                        158 kB/s |  36 kB     00:00    
+(2/5): nginx-mimetypes-2.1.53-3.red80.noarch.rpm                                                                                        68 kB/s |  20 kB     00:00    
+(3/5): nginx-1.28.2-1.red80.x86_64.rpm                                                                                                 102 kB/s |  33 kB     00:00    
+(4/5): nginx-filesystem-1.28.2-1.red80.noarch.rpm                                                                                       33 kB/s | 8.7 kB     00:00    
+(5/5): nginx-core-1.28.2-1.red80.x86_64.rpm                                                                                            1.6 MB/s | 668 kB     00:00    
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Общий размер                                                                                                                           1.2 MB/s | 765 kB     00:00     
+Проверка транзакции
+Проверка транзакции успешно завершена.
+Идет проверка транзакции
+Тест транзакции проведен успешно.
+Выполнение транзакции
+  Подготовка       :                                                                                                                                               1/1 
+  Запуск скриптлета: nginx-filesystem-1:1.28.2-1.red80.noarch                                                                                                      1/5 
+  Установка        : nginx-filesystem-1:1.28.2-1.red80.noarch                                                                                                      1/5 
+  Установка        : nginx-mimetypes-2.1.53-3.red80.noarch                                                                                                         2/5 
+  Установка        : nginx-core-1:1.28.2-1.red80.x86_64                                                                                                            3/5 
+  Установка        : nginx-1:1.28.2-1.red80.x86_64                                                                                                                 4/5 
+  Запуск скриптлета: nginx-1:1.28.2-1.red80.x86_64                                                                                                                 4/5 
+  Установка        : libcap-ng-utils-0.8.3-3.red80.x86_64                                                                                                          5/5 
+  Запуск скриптлета: libcap-ng-utils-0.8.3-3.red80.x86_64                                                                                                          5/5 
+  Проверка         : libcap-ng-utils-0.8.3-3.red80.x86_64                                                                                                          1/5 
+  Проверка         : nginx-mimetypes-2.1.53-3.red80.noarch                                                                                                         2/5 
+  Проверка         : nginx-1:1.28.2-1.red80.x86_64                                                                                                                 3/5 
+  Проверка         : nginx-core-1:1.28.2-1.red80.x86_64                                                                                                            4/5 
+  Проверка         : nginx-filesystem-1:1.28.2-1.red80.noarch                                                                                                      5/5 
+
+Установлен:
+  libcap-ng-utils-0.8.3-3.red80.x86_64       nginx-1:1.28.2-1.red80.x86_64      nginx-core-1:1.28.2-1.red80.x86_64      nginx-filesystem-1:1.28.2-1.red80.noarch     
+  nginx-mimetypes-2.1.53-3.red80.noarch     
+
+Выполнено!
+[alena@localhost ~]$ sudo dnf download tcpdump --downloaddir=/tmp
+Последняя проверка окончания срока действия метаданных: 2:38:37 назад, Сб 28 мар 2026 20:09:01.
+[MIRROR] tcpdump-4.99.5-1.red80.i686.rpm: Curl error (6): Couldn't resolve host name for https://repo1.red-soft.ru/redos/8.0/x86_64/updates/tcpdump-4.99.5-1.red80.i686.rpm [Could not resolve host: repo1.red-soft.ru]
+[MIRROR] tcpdump-4.99.5-1.red80.x86_64.rpm: Curl error (6): Couldn't resolve host name for https://repo1.red-soft.ru/redos/8.0/x86_64/updates/tcpdump-4.99.5-1.red80.x86_64.rpm [Could not resolve host: repo1.red-soft.ru]
+[MIRROR] tcpdump-4.99.5-1.red80.x86_64.rpm: Curl error (6): Couldn't resolve host name for https://mirror.yandex.ru/redos/8.0/x86_64/updates/tcpdump-4.99.5-1.red80.x86_64.rpm [Could not resolve host: mirror.yandex.ru]
+[MIRROR] tcpdump-4.99.5-1.red80.i686.rpm: Curl error (6): Couldn't resolve host name for https://mirror.yandex.ru/redos/8.0/x86_64/updates/tcpdump-4.99.5-1.red80.i686.rpm [Could not resolve host: mirror.yandex.ru]
+[MIRROR] tcpdump-4.99.5-1.red80.x86_64.rpm: Curl error (6): Couldn't resolve host name for http://repo.red-soft.ru/redos/8.0/x86_64/updates/tcpdump-4.99.5-1.red80.x86_64.rpm [Could not resolve host: repo.red-soft.ru]
+[MIRROR] tcpdump-4.99.5-1.red80.i686.rpm: Curl error (6): Couldn't resolve host name for http://repo.red-soft.ru/redos/8.0/x86_64/updates/tcpdump-4.99.5-1.red80.i686.rpm [Could not resolve host: repo.red-soft.ru]
+[MIRROR] tcpdump-4.99.5-1.red80.x86_64.rpm: Curl error (6): Couldn't resolve host name for http://repo.red-soft.ru/redos/8.0/x86_64/updates/tcpdump-4.99.5-1.red80.x86_64.rpm [Could not resolve host: repo.red-soft.ru]
+[FAILED] tcpdump-4.99.5-1.red80.x86_64.rpm: No more mirrors to try - All mirrors were already tried without success                                                   
+[alena@localhost ~]$ -1.red80.i686.rpm                           49% [===============================                                ] 3.6 GB/s | 523 kB     00:00 ETA
+[alena@localhost ~]$ sudo dnf download tcpdump --downloaddir=/tmp
+[sudo] пароль для alena: 
+RedOS - Updates                                                                                                                        0.0  B/s |   0  B     00:00    
+Errors during downloading metadata for repository 'updates':
+  - Curl error (6): Couldn't resolve host name for https://repo1.red-soft.ru/redos/8.0/x86_64/updates/repodata/repomd.xml [Could not resolve host: repo1.red-soft.ru]
+  - Curl error (6): Couldn't resolve host name for http://repo.red-soft.ru/redos/8.0/x86_64/updates/repodata/repomd.xml [Could not resolve host: repo.red-soft.ru]
+  - Curl error (6): Couldn't resolve host name for https://mirror.yandex.ru/redos/8.0/x86_64/updates/repodata/repomd.xml [Could not resolve host: mirror.yandex.ru]
+Error: Не удалось загрузить метаданные для репозитория «updates»: Cannot download repomd.xml: Cannot download repodata/repomd.xml: All mirrors were tried
+Игнорируются репозитории: updates
+Последняя проверка окончания срока действия метаданных: 2:44:44 назад, Сб 28 мар 2026 20:09:00.
+[MIRROR] tcpdump-4.99.1-3.red80.i686.rpm: Curl error (6): Couldn't resolve host name for https://repo1.red-soft.ru/redos/8.0/x86_64/os/tcpdump-4.99.1-3.red80.i686.rpm [Could not resolve host: repo1.red-soft.ru]
+[MIRROR] tcpdump-4.99.1-3.red80.x86_64.rpm: Curl error (6): Couldn't resolve host name for https://repo1.red-soft.ru/redos/8.0/x86_64/os/tcpdump-4.99.1-3.red80.x86_64.rpm [Could not resolve host: repo1.red-soft.ru]
+[MIRROR] tcpdump-4.99.1-3.red80.i686.rpm: Curl error (6): Couldn't resolve host name for https://mirror.yandex.ru/redos/8.0/x86_64/os/tcpdump-4.99.1-3.red80.i686.rpm [Could not resolve host: mirror.yandex.ru]
+[MIRROR] tcpdump-4.99.1-3.red80.x86_64.rpm: Curl error (6): Couldn't resolve host name for https://mirror.yandex.ru/redos/8.0/x86_64/os/tcpdump-4.99.1-3.red80.x86_64.rpm [Could not resolve host: mirror.yandex.ru]
+[MIRROR] tcpdump-4.99.1-3.red80.i686.rpm: Curl error (6): Couldn't resolve host name for http://repo.red-soft.ru/redos/8.0/x86_64/os/tcpdump-4.99.1-3.red80.i686.rpm [Could not resolve host: repo.red-soft.ru]
+[MIRROR] tcpdump-4.99.1-3.red80.x86_64.rpm: Curl error (6): Couldn't resolve host name for http://repo.red-soft.ru/redos/8.0/x86_64/os/tcpdump-4.99.1-3.red80.x86_64.rpm [Could not resolve host: repo.red-soft.ru]
+[MIRROR] tcpdump-4.99.1-3.red80.i686.rpm: Curl error (6): Couldn't resolve host name for http://repo.red-soft.ru/redos/8.0/x86_64/os/tcpdump-4.99.1-3.red80.i686.rpm [Could not resolve host: repo.red-soft.ru]
+[FAILED] tcpdump-4.99.1-3.red80.i686.rpm: No more mirrors to try - All mirrors were already tried without success                                                     
+[alena@localhost ~]$ ^C.red80.x86_64.rpm                         50% [===============================-                               ] 4.0 GB/s | 551 kB     00:00 ETA
+[alena@localhost ~]$ sudo dnf download tcpdump --downloaddir=/tmp
+[sudo] пароль для alena: 
+Repositories for R7 Office                                                                                                             574 kB/s | 973 kB     00:01    
+Repositories for Yandex Browser                                                                                                         30 kB/s | 7.2 kB     00:00    
+RedOS - Base                                                                                                                           4.8 MB/s |  65 MB     00:13    
+RedOS - Updates                                                                                                                        5.2 MB/s |  86 MB     00:16    
+(1/2): tcpdump-4.99.5-1.red80.x86_64.rpm                                                                                               2.7 MB/s | 523 kB     00:00    
+(2/2): tcpdump-4.99.5-1.red80.i686.rpm                                                                                                 1.4 MB/s | 530 kB     00:00    
+[alena@localhost ~]$ ls -l /tmp/tcpdump*.rpm
+-rw-r--r--. 1 root root 542686 мар 28 23:26 /tmp/tcpdump-4.99.5-1.red80.i686.rpm
+-rw-r--r--. 1 root root 535524 мар 28 23:26 /tmp/tcpdump-4.99.5-1.red80.x86_64.rpm
+[alena@localhost ~]$ sudo rpm -Uvh /tmp/tcpdump*.rpm
+ошибка: Неудовлетворенные зависимости:
+        libcrypto.so.3 нужен для tcpdump-14:4.99.5-1.red80.i686
+        libcrypto.so.3(OPENSSL_3.0.0) нужен для tcpdump-14:4.99.5-1.red80.i686
+        libpcap.so.1 нужен для tcpdump-14:4.99.5-1.red80.i686
+[alena@localhost ~]$ sudo rpm -Uvh --replacepkgs /tmp/tcpdump-4.99.5-1.red80.x86_64.rpm
+Verifying...                          ################################# [100%]
+Подготовка...               ################################# [100%]
+Обновление / установка...
+   1:tcpdump-14:4.99.5-1.red80        ################################# [ 50%]
+Очистка / удаление... 
+   2:tcpdump-14:4.99.5-1.red80        ################################# [100%]
+[alena@localhost ~]$ dd if=/dev/zero of=/tmp/disk.img bs=1M count=2048
+2048+0 records in
+2048+0 records out
+2147483648 bytes (2,1 GB, 2,0 GiB) copied, 2,26249 s, 949 MB/s
+[alena@localhost ~]$ sudo losetup -fP /tmp/disk.img
+[sudo] пароль для alena: 
+[alena@localhost ~]$ losetup -a
+/dev/loop1: []: (/tmp/disk.img)
+/dev/loop0: []: (/tmp/disk.img)
+[alena@localhost ~]$ sudo fdisk /dev/loop0
+
+Добро пожаловать в fdisk (util-linux 2.38.1).
+Изменения останутся только в памяти до тех пор, пока вы не решите записать их.
+Будьте внимательны, используя команду write.
+
+Устройство не содержит стандартной таблицы разделов.
+Создана новая метка DOS с идентификатором 0xb6440cd8.
+
+Команда (m для справки): n
+Тип раздела
+   p   основной (0 primary, 0 extended, 4 free)
+   e   расширенный (контейнер для логических разделов)
+Выберите (по умолчанию - p):p
+Номер раздела (1-4, default 1): 1
+Первый сектор (2048-4194303, default 2048): 
+Last sector, +/-sectors or +/-size{K,M,G,T,P} (2048-4194303, default 4194303): 
+
+Создан новый раздел 1 с типом 'Linux' и размером 2 GiB.
+
+Команда (m для справки): w
+Таблица разделов была изменена.
+Вызывается ioctl() для перечитывания таблицы разделов.
+Синхронизируются диски.
+
+[alena@localhost ~]$ sudo mkfs.ext4 -L MEPHI_DATA /dev/loop0p1
+mke2fs 1.46.3 (27-Jul-2021)
+Discarding device blocks: done                            
+Creating filesystem with 524032 4k blocks and 131072 inodes
+Filesystem UUID: 2de91afd-b812-4d69-ab60-4f30d54a1a61
+Superblock backups stored on blocks: 
+        32768, 98304, 163840, 229376, 294912
+
+Allocating group tables: done                            
+Writing inode tables: done                            
+Creating journal (8192 blocks): done
+Writing superblocks and filesystem accounting information: done 
+
+[alena@localhost ~]$ sudo mkdir -p /data/mephi-web
+[alena@localhost ~]$ echo 'LABEL=MEPHI_DATA /data/mephi-web ext4 defaults 0 2' | sudo tee -a /etc/fstab
+LABEL=MEPHI_DATA /data/mephi-web ext4 defaults 0 2
+[alena@localhost ~]$ sudo mount -a
+mount: (hint) your fstab has been modified, but systemd still uses
+       the old version; use 'systemctl daemon-reload' to reload.
+[alena@localhost ~]$ sudo systemctl daemon-reload
+[alena@localhost ~]$ sudo mount -a
+[alena@localhost ~]$ sudo systemctl start nginx
+[sudo] пароль для alena: 
+[alena@localhost ~]$ sudo systemctl enable nginx
+Created symlink /etc/systemd/system/multi-user.target.wants/nginx.service → /usr/lib/systemd/system/nginx.service.
+[alena@localhost ~]$ systemctl is-active nginx
+active
+[alena@localhost ~]$ systemctl is-enabled nginx
+enabled
+[alena@localhost ~]$ journalctl -u nginx --since "5 minutes ago" > /tmp/nginx_recent_logs.txt
+[alena@localhost ~]$ cat /tmp/nginx_recent_logs.txt
+мар 29 00:00:16 mephi-2026.domain.local systemd[1]: Starting nginx.service - The nginx HTTP and reverse proxy server...
+мар 29 00:00:16 mephi-2026.domain.local nginx[45559]: nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+мар 29 00:00:16 mephi-2026.domain.local nginx[45559]: nginx: configuration file /etc/nginx/nginx.conf test is successful
+мар 29 00:00:16 mephi-2026.domain.local systemd[1]: Started nginx.service - The nginx HTTP and reverse proxy server.
+[alena@localhost ~]$ sudo groupadd mephi-devs
+[sudo] пароль для alena: 
+[alena@localhost ~]$ sudo useradd -m -G mephi-devs mephi-admin
+[alena@localhost ~]$ echo 'mephi-admin:P@ssw0rd2026.' | sudo chpasswd
+[alena@localhost ~]$ sudo chown mephi-admin:mephi-devs /data/mephi-web
+[alena@localhost ~]$ sudo chmod 2775 /data/mephi-web
+[alena@localhost ~]$ id mephi-admin
+uid=1001(mephi-admin) gid=1002(mephi-admin) группы=1002(mephi-admin),1001(mephi-devs)
+[alena@localhost ~]$ ls -ld /data/mephi-web
+drwxrwsr-x. 3 mephi-admin mephi-devs 4096 мар 28 23:46 /data/mephi-web
+[alena@localhost ~]$ getenforce
+Enforcing
+[alena@localhost ~]$ sudo semanage fcontext -a -t httpd_sys_content_t "/data/mephi-web(/.*)?"
+[sudo] пароль для alena: 
+[alena@localhost ~]$ sudo restorecon -Rv /data/mephi-web
+Relabeled /data/mephi-web from system_u:object_r:unlabeled_t:s0 to system_u:object_r:httpd_sys_content_t:s0
+Relabeled /data/mephi-web/lost+found from system_u:object_r:unlabeled_t:s0 to system_u:object_r:httpd_sys_content_t:s0
+[alena@localhost ~]$ ls -Zd /data/mephi-web
+system_u:object_r:httpd_sys_content_t:s0 /data/mephi-web
+[alena@localhost ~]$ ls -Z /data/mephi-web
+system_u:object_r:httpd_sys_content_t:s0 lost+found
+[alena@localhost ~]$ echo 'test' | sudo tee /data/mephi-web/index.html
+[sudo] пароль для alena: 
+test
+[alena@localhost ~]$ sudo chown mephi-admin:mephi-devs /data/mephi-web/index.html
+[alena@localhost ~]$ ls -Z /data/mephi-web/index.html
+unconfined_u:object_r:httpd_sys_content_t:s0 /data/mephi-web/index.html
+[alena@localhost ~]$ grep -n "root\|server_name\|location /" /etc/nginx/nginx.conf
+40:        server_name  _;
+41:        root         /usr/share/nginx/html;
+53:#        server_name  _;
+54:#        root         /usr/share/nginx/html;
+[alena@localhost ~]$ sudo nano /etc/nginx/nginx.conf
+[alena@localhost ~]$ sudo nano /etc/nginx/nginx.conf
+[alena@localhost ~]$ ls -l /usr/sbin/tcpdump
+-rwxr-xr-x. 1 root root 1299064 июл 30  2025 /usr/sbin/tcpdump
+[alena@localhost ~]$ sudo chmod u-s /usr/sbin/tcpdump
+[sudo] пароль для alena: 
+[alena@localhost ~]$ sudo setcap cap_net_raw,cap_net_admin=eip /usr/sbin/tcpdump
+[alena@localhost ~]$ getcap /usr/sbin/tcpdump
+/usr/sbin/tcpdump cap_net_admin,cap_net_raw=eip
+[alena@localhost ~]$ sudo -u mephi-admin tcpdump --help
+tcpdump version 4.99.5
+libpcap version 1.10.1 (with TPACKET_V3)
+OpenSSL 3.5.4 30 Sep 2025
+64-bit build, 64-bit time_t
+Usage: tcpdump [-AbdDefhHIJKlLnNOpqStuUvxX#] [ -B size ] [ -c count ] [--count]
+                [ -C file_size ] [ -E algo:secret ] [ -F file ] [ -G seconds ]
+                [ -i interface ] [ --immediate-mode ] [ -j tstamptype ]
+                [ -M secret ] [ --number ] [ --print ] [ -Q in|out|inout ]
+                [ -r file ] [ -s snaplen ] [ -T type ] [ --version ]
+                [ -V file ] [ -w file ] [ -W filecount ] [ -y datalinktype ]
+                [ --time-stamp-precision precision ] [ --micro ] [ --nano ]
+                [ -z postrotate-command ] [ -Z user ] [ expression ]
+[alena@localhost ~]$ getenforce > ~/selinux_status.txt
+[alena@localhost ~]$ ls -Zd /data/mephi-web > ~/file_contexts.txt
+[alena@localhost ~]$ getcap /usr/sbin/tcpdump > ~/tcpdump_capabilities.txt
+[alena@localhost ~]$ 
+
+# тут у меня вылетел компьютер, поэтому что-то не сохранилось
+
+[alena@mephi-2026 ~]$ sudo -u mephi-admin sh -c 'echo "Hello from Student: М255577" > /data/mephi-web/index.html'
+[sudo] пароль для alena:
+[alena@mephi-2026 ~]$ cat /data/mephi-web/index.html
+Hello from Student: М255577
+[alena@mephi-2026 ~]$ ls -l /data/mephi-web/index.html
+-rw-r--r--. 1 mephi-admin mephi-devs 29 мар 29 14:38 /data/mephi-web/index.html
+[alena@mephi-2026 ~]$ curl http://localhost
+<html>
+<head><title>403 Forbidden</title></head>
+<body>
+<center><h1>403 Forbidden</h1></center>
+<hr><center>nginx/1.28.2</center>
+</body>
+</html>
+[alena@mephi-2026 ~]$ sudo restorecon -Rv /data/mephi-web
+Relabeled /data/mephi-web from unconfined_u:object_r:default_t:s0 to unconfined_u:object_r:httpd_sys_content_t:s0
+Relabeled /data/mephi-web/index.html from unconfined_u:object_r:default_t:s0 to unconfined_u:object_r:httpd_sys_content_t:s0
+[alena@mephi-2026 ~]$ ls -Zd /data/mephi-web
+unconfined_u:object_r:httpd_sys_content_t:s0 /data/mephi-web
+[alena@mephi-2026 ~]$ ls -Z /data/mephi-web/index.html
+unconfined_u:object_r:httpd_sys_content_t:s0 /data/mephi-web/index.html
+[alena@mephi-2026 ~]$ curl http://localhost
+Hello from Student: М255577
+[alena@mephi-2026 ~]$ curl http://192.168.1.100
+Hello from Student: М255577
+[alena@mephi-2026 ~]$ curl -s http://192.168.1.100 > ~/curl_output.txt
+[alena@mephi-2026 ~]$ history

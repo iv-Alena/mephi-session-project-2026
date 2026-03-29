@@ -1,0 +1,95 @@
+[alena@mephi-2026 ~]$ ip a
+ip route
+lsblk
+sudo losetup -a
+mount | grep mephi
+cat /etc/fstab
+rpm -q nginx tcpdump libcap-ng-utils
+id mephi-admin
+getcap /usr/sbin/tcpdump
+systemctl is-active nginx
+systemctl is-enabled nginx
+getenforce
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host noprefixroute 
+       valid_lft forever preferred_lft forever
+2: enp2s0f1: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc fq_codel state DOWN group default qlen 1000
+    link/ether 98:28:a6:16:e0:b7 brd ff:ff:ff:ff:ff:ff
+3: wlp4s0f3u2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether 10:fe:ed:1b:1e:db brd ff:ff:ff:ff:ff:ff
+    inet 192.168.3.18/24 brd 192.168.3.255 scope global dynamic noprefixroute wlp4s0f3u2
+       valid_lft 86043sec preferred_lft 86043sec
+    inet6 fe80::c135:2e62:3f5f:8dfd/64 scope link noprefixroute 
+       valid_lft forever preferred_lft forever
+default via 192.168.3.1 dev wlp4s0f3u2 proto dhcp src 192.168.3.18 metric 600 
+192.168.3.0/24 dev wlp4s0f3u2 proto kernel scope link src 192.168.3.18 metric 600 
+NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
+sda      8:0    0 465,8G  0 disk 
+├─sda1   8:1    0   600M  0 part /boot/efi
+├─sda2   8:2    0     1G  0 part /boot
+├─sda3   8:3    0   7,3G  0 part [SWAP]
+├─sda4   8:4    0    70G  0 part /
+└─sda5   8:5    0 386,8G  0 part /home
+zram0  252:0    0     8G  0 disk [SWAP]
+[sudo] пароль для alena: 
+Попробуйте ещё раз.
+[sudo] пароль для alena: 
+
+#
+# /etc/fstab
+# Created by anaconda on Wed Feb 25 22:48:07 2026
+#
+# Accessible filesystems, by reference, are maintained under '/dev/disk/'.
+# See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info.
+#
+# After editing this file, run 'systemctl daemon-reload' to update systemd
+# units generated from this file.
+#
+UUID=5e893fd3-4924-478c-b1bc-1eea012d8509 /                       ext4    defaults        1 1
+UUID=841c1043-9add-4a24-bddf-a0945956d437 /boot                   ext4    defaults        1 2
+UUID=C1FB-E159          /boot/efi               vfat    umask=0077,shortname=winnt 0 2
+UUID=a1aa6fa5-7301-41de-a32a-4ba760cc94fd /home                   ext4    defaults        1 2
+UUID=c188b23a-397a-45fd-bb40-7cb4edd9af2c none                    swap    defaults        0 0
+# LABEL=MEPHI_DATA /data/mephi-web ext4 defaults 0 2
+nginx-1.28.2-1.red80.x86_64
+tcpdump-4.99.5-1.red80.x86_64
+libcap-ng-utils-0.8.3-3.red80.x86_64
+uid=1001(mephi-admin) gid=1002(mephi-admin) группы=1002(mephi-admin),1001(mephi-devs)
+/usr/sbin/tcpdump cap_net_admin,cap_net_raw=eip
+active
+enabled
+Enforcing
+[alena@mephi-2026 ~]$ ls -ld /data/mephi-web
+drwxr-xr-x. 2 root root 4096 мар 28 23:46 /data/mephi-web
+[alena@mephi-2026 ~]$ su - mephi-admin
+Пароль: 
+su: Сбой при проверке подлинности
+[alena@mephi-2026 ~]$ sudo -u mephi-admin sh -c 'echo "Hello from Student: М255577" > /data/mephi-web/index.html'
+[sudo] пароль для alena: 
+[alena@mephi-2026 ~]$ cat /data/mephi-web/index.html
+Hello from Student: М255577
+[alena@mephi-2026 ~]$ ls -l /data/mephi-web/index.html
+-rw-r--r--. 1 mephi-admin mephi-devs 29 мар 29 14:38 /data/mephi-web/index.html
+[alena@mephi-2026 ~]$ curl http://localhost
+<html>
+<head><title>403 Forbidden</title></head>
+<body>
+<center><h1>403 Forbidden</h1></center>
+<hr><center>nginx/1.28.2</center>
+</body>
+</html>
+[alena@mephi-2026 ~]$ sudo restorecon -Rv /data/mephi-web
+Relabeled /data/mephi-web from unconfined_u:object_r:default_t:s0 to unconfined_u:object_r:httpd_sys_content_t:s0
+Relabeled /data/mephi-web/index.html from unconfined_u:object_r:default_t:s0 to unconfined_u:object_r:httpd_sys_content_t:s0
+[alena@mephi-2026 ~]$ ls -Zd /data/mephi-web
+unconfined_u:object_r:httpd_sys_content_t:s0 /data/mephi-web
+[alena@mephi-2026 ~]$ ls -Z /data/mephi-web/index.html
+unconfined_u:object_r:httpd_sys_content_t:s0 /data/mephi-web/index.html
+[alena@mephi-2026 ~]$ curl http://localhost
+Hello from Student: М255577
+[alena@mephi-2026 ~]$ curl http://192.168.1.100
+Hello from Student: М255577
+[alena@mephi-2026 ~]$ 
